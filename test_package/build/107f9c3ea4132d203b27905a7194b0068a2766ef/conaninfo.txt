@@ -1,0 +1,36 @@
+[settings]
+    arch=x86_64
+    build_type=Release
+    compiler=Visual Studio
+    compiler.runtime=MD
+    compiler.version=15
+    os=Windows
+
+[requires]
+    libwebp/0.6.0
+
+[options]
+
+
+[full_settings]
+    arch=x86_64
+    build_type=Release
+    compiler=Visual Studio
+    compiler.runtime=MD
+    compiler.version=15
+    os=Windows
+
+[full_requires]
+    libwebp/0.6.0@bincrafters/testing:6cc50b139b9c3d27b3e9042d5f5372d327b3a9f7
+
+[full_options]
+    libwebp:shared=False
+
+[scope]
+
+
+[recipe_hash]
+
+
+[env]
+
