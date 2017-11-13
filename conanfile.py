@@ -14,6 +14,8 @@ class libwebpConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
+    exports_sources = ['CMakeLists.txt']
+    generators = 'cmake'
 
     def source(self):
         base_url = "https://github.com/webmproject/libwebp"
@@ -30,7 +32,7 @@ class libwebpConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_dir="sources", build_dir="./")
+        cmake.configure()
         cmake.build()
 
     def package(self):
