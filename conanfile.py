@@ -32,6 +32,19 @@ class libwebpConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
+        if self.options.shared and self.settings.compiler == "Visual Studio":
+            tools.replace_in_file(os.path.join('sources', 'src', 'webp', 'types.h'),
+                                  '#ifndef WEBP_EXTERN',
+                                  """#ifndef WEBP_EXTERN
+  #ifdef _MSC_VER
+    #ifdef WEBP_USE_DLL
+      #define WEBP_EXTERN(type) __declspec(dllimport) type
+    #else /* WEBP_USE_DLL */
+      #define WEBP_EXTERN(type) __declspec(dllexport) type
+    #endif /* WEBP_USE_DLL */
+  #endif /* _MSC_VER */
+#endif
+#ifndef WEBP_EXTERN""")
         cmake.configure()
         cmake.build()
 
@@ -41,12 +54,14 @@ class libwebpConan(ConanFile):
         self.copy("webp/types.h", dst="include", src=src_dir)
         self.copy("webp/decode.h", dst="include", src=src_dir)
         self.copy("webp/encode.h", dst="include", src=src_dir)
-        self.copy("libwebp*.a", dst="lib", src="lib")
-        self.copy("webp*.lib", dst="lib", src="lib")
-        self.copy("webp*.lib", dst="lib", src="Release")
-        self.copy("*.so*", dst="lib", src='sources')
-        self.copy("*.dylib", dst="lib", src='sources')
-        self.copy("*.dll", dst="bin")
+        self.copy("libwebp*.a", dst="lib", src="lib", keep_path=False)
+        self.copy("webp*.lib", dst="lib", src="lib", keep_path=False)
+        self.copy("webp*.lib", dst="lib", src="Release", keep_path=False)
+        self.copy("*.so*", dst="lib", src='sources', keep_path=False)
+        self.copy("*.dylib", dst="lib", src='sources', keep_path=False)
+        self.copy("*.dll", dst="bin", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["webp"]
+        if self.options.shared and self.settings.compiler == "Visual Studio":
+            self.cpp_info.defines.append('WEBP_USE_DLL')
