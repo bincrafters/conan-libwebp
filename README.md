@@ -47,4 +47,4 @@ The following command both runs all the steps of the conan file, and publishes t
     $ conan upload libwebp/0.6.0@bincrafters/stable --all -r bincrafters
 
 ## License
-[LICENSE_TYPE](LICENSE)
+[BSD-3](LICENSE)
