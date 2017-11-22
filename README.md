@@ -2,8 +2,6 @@
 [![Build Status](https://travis-ci.org/bincrafters/conan-libwebp.svg?branch=stable%2F0.6.0)](https://travis-ci.org/bincrafters/conan-libwebp)
 [![Build status](https://ci.appveyor.com/api/projects/status/a5snyovachh6e8nh?svg=true)](https://ci.appveyor.com/project/BinCrafters/conan-libwebp)
 
-Brief statement describing libwebp
-
 [Conan.io](https://conan.io) package for [libwebp](https://github.com/webmproject/libwebp) project
 
 The packages generated with this **conanfile** can be found in [Bintray](https://bintray.com/bincrafters/public-conan/libwebp%3Abincrafters).
