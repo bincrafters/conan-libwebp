@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 from conans import ConanFile, CMake, tools
+import os
 
 
 class libwebpConan(ConanFile):
     name = "libwebp"
     version = "0.6.0"
-    license = "BSD-3"
     description = "library to encode and decode images in WebP format"
     url = "http://github.com/bincrafters/conan-libwebp"
+    license = "BSD-3"
+    exports = ["LICENSE.md"]
+    exports_sources = ['CMakeLists.txt']
+    generators = 'cmake'
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
-    exports_sources = ['CMakeLists.txt']
-    generators = 'cmake'
 
     def source(self):
         base_url = "https://github.com/webmproject/libwebp"
