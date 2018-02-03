@@ -10,23 +10,31 @@ class libwebpConan(ConanFile):
     version = "0.6.0"
     description = "library to encode and decode images in WebP format"
     url = "http://github.com/bincrafters/conan-libwebp"
-    license = "BSD-3"
+    license = "BSD 3-Clause"
     exports = ["LICENSE.md"]
     exports_sources = ['CMakeLists.txt']
     generators = 'cmake'
+    source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
 
     def source(self):
-        base_url = "https://github.com/webmproject/libwebp"
-        archive_name = "v" + self.version
-        archive_path = "/archive/"
-        archive_extension = ".zip"
-        download_url = base_url + archive_path + archive_name + archive_extension
-        tools.get(download_url)
-        sources_dir_name = self.name + "-" + self.version
-        os.rename(sources_dir_name, "sources")
+        # base_url = "https://github.com/webmproject/libwebp"
+        # archive_name = "v" + self.version
+        # archive_path = "/archive/"
+        # archive_extension = ".zip"
+        # download_url = base_url + archive_path + archive_name + archive_extension
+        # tools.get(download_url)
+        # sources_dir_name = self.name + "-" + self.version
+        # os.rename(sources_dir_name, self.source_subfolder)
+        
+        source_url = "https://github.com/webmproject/libwebp"
+        tools.get("{0}/archive/v{1}.tar.gz".format(source_url, self.version))
+        extracted_dir = self.name + "-" + self.version
+
+        #Rename to "source_subfolder" is a convention to simplify later steps
+        os.rename(extracted_dir, self.source_subfolder)
 
     def configure(self):
         del self.settings.compiler.libcxx
@@ -34,7 +42,7 @@ class libwebpConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         if self.options.shared and self.settings.compiler == "Visual Studio":
-            tools.replace_in_file(os.path.join('sources', 'src', 'webp', 'types.h'),
+            tools.replace_in_file(os.path.join(self.source_subfolder, 'src', 'webp', 'types.h'),
                                   '#ifndef WEBP_EXTERN',
                                   """#ifndef WEBP_EXTERN
   #ifdef _MSC_VER
@@ -50,8 +58,9 @@ class libwebpConan(ConanFile):
         cmake.build()
 
     def package(self):
-        src_dir = os.path.join("sources", "src")
-        self.copy("FindWEBP.cmake", ".", ".")
+        src_dir = os.path.join(self.source_subfolder, "src")
+        self.copy("COPYING", dst="licenses", src=self.source_subfolder)
+        self.copy("FindWEBP.cmake", dst=".", src=".")
         self.copy("webp/types.h", dst="include", src=src_dir)
         self.copy("webp/decode.h", dst="include", src=src_dir)
         self.copy("webp/encode.h", dst="include", src=src_dir)
