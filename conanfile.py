@@ -67,8 +67,8 @@ class libwebpConan(ConanFile):
         self.copy("libwebp*.a", dst="lib", src="lib", keep_path=False)
         self.copy("webp*.lib", dst="lib", src="lib", keep_path=False)
         self.copy("webp*.lib", dst="lib", src="Release", keep_path=False)
-        self.copy("*.so*", dst="lib", src='sources', keep_path=False)
-        self.copy("*.dylib", dst="lib", src='sources', keep_path=False)
+        self.copy("*.so*", dst="lib", src=self.source_subfolder, keep_path=False)
+        self.copy("*.dylib", dst="lib", src=self.source_subfolder, keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
 
     def package_info(self):
