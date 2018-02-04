@@ -13,7 +13,7 @@ class LibwebpConan(ConanFile):
     url = "http://github.com/bincrafters/conan-libwebp"
     license = "BSD 3-Clause"
     exports = ["LICENSE.md"]
-    exports_sources = ['CMakeLists.txt', 'FindWEBP.cmake']
+    exports_sources = ['CMakeLists.txt']
     generators = 'cmake'
     source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
