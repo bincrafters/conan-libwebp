@@ -51,6 +51,14 @@ class LibwebpConan(ConanFile):
 #endif
 
 #ifndef WEBP_EXTERN""")
+
+        # cmake misses dll (RUNTIME) copy
+        tools.replace_in_file(os.path.join(self.source_subfolder, "CMakeListsOriginal.txt"),
+                              "LIBRARY DESTINATION lib",
+                              "RUNTIME DESTINATION bin\nLIBRARY DESTINATION lib")
+
+        cmake = CMake(self)
+
         cmake.configure(source_folder=self.source_subfolder)
         cmake.build()
         cmake.install()
