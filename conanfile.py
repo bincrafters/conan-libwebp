@@ -63,5 +63,3 @@ class LibwebpConan(ConanFile):
         self.cpp_info.libs = ["webp"]
         if self.options.shared and self.settings.os == "Windows" and self.settings.compiler != 'Visual Studio':
             self.cpp_info.libs = [lib+'.dll' for lib in self.cpp_info.libs]
-        if self.options.shared and self.settings.compiler == "Visual Studio":
-            self.cpp_info.defines.append('WEBP_USE_DLL')
