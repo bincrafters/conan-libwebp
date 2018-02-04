@@ -60,6 +60,11 @@ class LibwebpConan(ConanFile):
         cmake = CMake(self)
         # should be an option but it doesn't work yet
         cmake.definitions["WEBP_ENABLE_SIMD"] = True
+        # avoid finding system libs
+        cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_GIF'] = True
+        cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
+        cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_TIFF'] = True
+        cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_JPEG'] = True
 
         cmake.configure(source_folder=self.source_subfolder)
         cmake.build()
