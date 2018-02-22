@@ -17,8 +17,8 @@ class LibwebpConan(ConanFile):
     generators = 'cmake'
     source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = "shared=False", "fPIC=True"
 
     def source(self):
         source_url = "https://github.com/webmproject/libwebp"
@@ -33,6 +33,8 @@ class LibwebpConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
+        if self.settings.compiler == 'Visual Studio':
+            del self.options.fPIC
 
     def build(self):
         # WEBP_EXTERN is not specified on Windows
@@ -60,6 +62,8 @@ class LibwebpConan(ConanFile):
         cmake = CMake(self)
         # should be an option but it doesn't work yet
         cmake.definitions["WEBP_ENABLE_SIMD"] = True
+        if self.settings.compiler != 'Visual Studio':
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
         # avoid finding system libs
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_GIF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
