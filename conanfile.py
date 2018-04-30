@@ -8,7 +8,7 @@ from conans import ConanFile, CMake, tools
 
 class LibwebpConan(ConanFile):
     name = "libwebp"
-    version = "0.6.1"
+    version = "1.0.0"
     description = "library to encode and decode images in WebP format"
     url = "http://github.com/bincrafters/conan-libwebp"
     homepage = "https://github.com/webmproject/libwebp"
