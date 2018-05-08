@@ -34,6 +34,8 @@ class LibwebpConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
+
+    def config_options(self):
         if self.settings.compiler == 'Visual Studio':
             del self.options.fPIC
 
