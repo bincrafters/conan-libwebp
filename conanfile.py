@@ -19,8 +19,10 @@ class LibwebpConan(ConanFile):
     source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False],
-                "with_simd": [True, False], "near_lossless": [True, False]}
-    default_options = "shared=False", "fPIC=True", "with_simd=True", "near_lossless=True"
+                "with_simd": [True, False], "near_lossless": [True, False],
+                "swap_16bit_csp": [True, False]}
+    default_options = "shared=False", "fPIC=True", "with_simd=True", "near_lossless=True", \
+                      "swap_16bit_csp=False"
 
     def source(self):
         source_url = "https://github.com/webmproject/libwebp"
@@ -74,6 +76,7 @@ class LibwebpConan(ConanFile):
             cmake.definitions["WEBP_ENABLE_NEAR_LOSSLESS"] = self.options.near_lossless
         else:
             cmake.definitions["WEBP_NEAR_LOSSLESS"] = self.options.near_lossless
+        cmake.definitions['WEBP_ENABLE_SWAP_16BIT_CSP'] = self.options.swap_16bit_csp
         # avoid finding system libs
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_GIF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
