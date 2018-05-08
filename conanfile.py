@@ -18,8 +18,11 @@ class LibwebpConan(ConanFile):
     generators = 'cmake'
     source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = "shared=False", "fPIC=True"
+    options = {"shared": [True, False], "fPIC": [True, False],
+                "with_simd": [True, False], "near_lossless": [True, False],
+                "swap_16bit_csp": [True, False]}
+    default_options = "shared=False", "fPIC=True", "with_simd=True", "near_lossless=True", \
+                      "swap_16bit_csp=False"
 
     def source(self):
         source_url = "https://github.com/webmproject/libwebp"
@@ -34,8 +37,14 @@ class LibwebpConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
-        if self.settings.compiler == 'Visual Studio':
+
+    def config_options(self):
+        if self.settings.os == 'Windows':
             del self.options.fPIC
+
+    @property
+    def version_components(self):
+        return [int(x) for x in self.version.split('.')]
 
     def build(self):
         # WEBP_EXTERN is not specified on Windows
@@ -62,9 +71,12 @@ class LibwebpConan(ConanFile):
 
         cmake = CMake(self)
         # should be an option but it doesn't work yet
-        cmake.definitions["WEBP_ENABLE_SIMD"] = True
-        if self.settings.compiler != 'Visual Studio':
-            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
+        cmake.definitions["WEBP_ENABLE_SIMD"] = self.options.with_simd
+        if self.version_components[0] >= 1:
+            cmake.definitions["WEBP_ENABLE_NEAR_LOSSLESS"] = self.options.near_lossless
+        else:
+            cmake.definitions["WEBP_NEAR_LOSSLESS"] = self.options.near_lossless
+        cmake.definitions['WEBP_ENABLE_SWAP_16BIT_CSP'] = self.options.swap_16bit_csp
         # avoid finding system libs
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_GIF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
