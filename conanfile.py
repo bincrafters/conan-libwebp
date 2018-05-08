@@ -65,8 +65,6 @@ class LibwebpConan(ConanFile):
         cmake = CMake(self)
         # should be an option but it doesn't work yet
         cmake.definitions["WEBP_ENABLE_SIMD"] = True
-        if self.settings.compiler != 'Visual Studio':
-            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
         # avoid finding system libs
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_GIF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
