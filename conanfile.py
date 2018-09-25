@@ -70,9 +70,20 @@ class LibwebpConan(ConanFile):
                               "LIBRARY DESTINATION lib",
                               "RUNTIME DESTINATION bin\nLIBRARY DESTINATION lib")
 
+        if self.version_components[0] >= 1:
+            # linking problems with imageioutil
+            tools.replace_in_file(os.path.join(self.source_subfolder, "CMakeListsOriginal.txt"),
+                                  "target_link_libraries(imageioutil webp)",
+                                  "target_link_libraries(imageioutil webp)\ntarget_link_libraries(exampleutil imageioutil)")
+
+            tools.replace_in_file(os.path.join(self.source_subfolder, "CMakeListsOriginal.txt"),
+                                  "target_link_libraries(imageenc webp)",
+                                  "target_link_libraries(imageenc webp)\ntarget_link_libraries(imageenc imageioutil)")
+
         cmake = CMake(self)
-        # it will build libwebpmux
-        cmake.definitions['WEBP_BUILD_IMG2WEBP'] = True
+        if self.version_components[0] >= 1:
+            # it will build libwebpmux
+            cmake.definitions['WEBP_BUILD_IMG2WEBP'] = True
         # should be an option but it doesn't work yet
         cmake.definitions["WEBP_ENABLE_SIMD"] = self.options.with_simd
         if self.version_components[0] >= 1:
