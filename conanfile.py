@@ -12,6 +12,7 @@ class LibwebpConan(ConanFile):
     description = "library to encode and decode images in WebP format"
     url = "http://github.com/bincrafters/conan-libwebp"
     homepage = "https://github.com/webmproject/libwebp"
+    author = "Bincrafters <bincrafters@gmail.com>"
     license = "BSD 3-Clause"
     exports = ["LICENSE.md"]
     exports_sources = ['CMakeLists.txt']
@@ -69,13 +70,19 @@ class LibwebpConan(ConanFile):
                               "LIBRARY DESTINATION lib",
                               "RUNTIME DESTINATION bin\nLIBRARY DESTINATION lib")
 
+        if self.version_components[0] >= 1:
+            # allow to build webpmux
+            tools.replace_in_file(os.path.join(self.source_subfolder, "CMakeListsOriginal.txt"),
+                                  "if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)",
+                                  "if(TRUE)")
+
         cmake = CMake(self)
         # should be an option but it doesn't work yet
         cmake.definitions["WEBP_ENABLE_SIMD"] = self.options.with_simd
         if self.version_components[0] >= 1:
-            cmake.definitions["WEBP_ENABLE_NEAR_LOSSLESS"] = self.options.near_lossless
-        else:
             cmake.definitions["WEBP_NEAR_LOSSLESS"] = self.options.near_lossless
+        else:
+            cmake.definitions["WEBP_ENABLE_NEAR_LOSSLESS"] = self.options.near_lossless
         cmake.definitions['WEBP_ENABLE_SWAP_16BIT_CSP'] = self.options.swap_16bit_csp
         # avoid finding system libs
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_GIF'] = True
