@@ -12,6 +12,7 @@ class LibwebpConan(ConanFile):
     description = "library to encode and decode images in WebP format"
     url = "http://github.com/bincrafters/conan-libwebp"
     homepage = "https://github.com/webmproject/libwebp"
+    author = "Bincrafters <bincrafters@gmail.com>"
     license = "BSD 3-Clause"
     exports = ["LICENSE.md"]
     exports_sources = ['CMakeLists.txt']
