@@ -71,19 +71,12 @@ class LibwebpConan(ConanFile):
                               "RUNTIME DESTINATION bin\nLIBRARY DESTINATION lib")
 
         if self.version_components[0] >= 1:
-            # linking problems with imageioutil
+            # allow to build webpmux
             tools.replace_in_file(os.path.join(self.source_subfolder, "CMakeListsOriginal.txt"),
-                                  "target_link_libraries(imageioutil webp)",
-                                  "target_link_libraries(imageioutil webp)\ntarget_link_libraries(exampleutil imageioutil)")
-
-            tools.replace_in_file(os.path.join(self.source_subfolder, "CMakeListsOriginal.txt"),
-                                  "target_link_libraries(imageenc webp)",
-                                  "target_link_libraries(imageenc webp)\ntarget_link_libraries(imageenc imageioutil)")
+                                  "if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)",
+                                  "if(TRUE)")
 
         cmake = CMake(self)
-        if self.version_components[0] >= 1:
-            # it will build libwebpmux
-            cmake.definitions['WEBP_BUILD_IMG2WEBP'] = True
         # should be an option but it doesn't work yet
         cmake.definitions["WEBP_ENABLE_SIMD"] = self.options.with_simd
         if self.version_components[0] >= 1:
@@ -104,13 +97,6 @@ class LibwebpConan(ConanFile):
     def package(self):
         self.copy("COPYING", dst="licenses", src=self.source_subfolder)
         self.copy("FindWEBP.cmake", dst=".", src=".")
-        # remove binaries
-        for bin_program in ['img2webp']:
-            for ext in ['', '.exe']:
-                try:
-                    os.remove(os.path.join(self.package_folder, 'bin', bin_program+ext))
-                except:
-                    pass
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
