@@ -15,7 +15,8 @@ class LibwebpConan(ConanFile):
     author = "Bincrafters <bincrafters@gmail.com>"
     license = "BSD 3-Clause"
     exports = ["LICENSE.md"]
-    exports_sources = ['CMakeLists.txt']
+    exports_sources = ['CMakeLists.txt',
+                       '0001-install-pkg-config-files-during-the-CMake-build.patch']
     generators = 'cmake'
     source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
@@ -31,6 +32,9 @@ class LibwebpConan(ConanFile):
         extracted_dir = self.name + "-" + self.version
 
         os.rename(extracted_dir, self.source_subfolder)
+
+        tools.patch(base_path=self.source_subfolder,
+                    patch_file='0001-install-pkg-config-files-during-the-CMake-build.patch')
         os.rename(os.path.join(self.source_subfolder, "CMakeLists.txt"),
                   os.path.join(self.source_subfolder, "CMakeListsOriginal.txt"))
         shutil.copy("CMakeLists.txt",
@@ -89,6 +93,8 @@ class LibwebpConan(ConanFile):
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_TIFF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_JPEG'] = True
+
+        cmake.definitions['CMAKE_INSTALL_LIBDIR'] = 'lib'
 
         cmake.configure(source_folder=self.source_subfolder)
         cmake.build()
