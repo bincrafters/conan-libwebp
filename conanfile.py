@@ -105,6 +105,6 @@ class LibwebpConan(ConanFile):
         self.copy("FindWEBP.cmake", dst=".", src=".")
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.libs = ['webpmux', 'webpdemux', 'webpdecoder', 'webp']
         if self.options.shared and self.settings.os == "Windows" and self.settings.compiler != 'Visual Studio':
             self.cpp_info.libs = [lib+'.dll' for lib in self.cpp_info.libs]
