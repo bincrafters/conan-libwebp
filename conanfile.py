@@ -66,7 +66,8 @@ class LibwebpConan(ConanFile):
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_JPEG'] = True
 
         if self.settings.os == "Android":
-            cmake.definitions['ANDROID_ABI'] = cmake.definitions['CMAKE_ANDROID_ARCH_ABI']
+            if 'CMAKE_ANDROID_ARCH_ABI' in cmake.definitions:
+                cmake.definitions['ANDROID_ABI'] = cmake.definitions['CMAKE_ANDROID_ARCH_ABI']
 
             if 'ANDROID_NDK_HOME' in os.environ:
                 cmake.definitions['ANDROID_NDK'] = os.environ.get('ANDROID_NDK_HOME')
