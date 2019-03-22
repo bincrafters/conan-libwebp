@@ -8,7 +8,7 @@ from conans import ConanFile, CMake, tools
 
 class LibwebpConan(ConanFile):
     name = "libwebp"
-    version = "1.0.0"
+    version = "1.0.2"
     description = "library to encode and decode images in WebP format"
     url = "http://github.com/bincrafters/conan-libwebp"
     homepage = "https://github.com/webmproject/libwebp"
@@ -64,13 +64,6 @@ class LibwebpConan(ConanFile):
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_TIFF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_JPEG'] = True
-
-        if self.settings.os == "Android":
-            if 'CMAKE_ANDROID_ARCH_ABI' in cmake.definitions:
-                cmake.definitions['ANDROID_ABI'] = cmake.definitions['CMAKE_ANDROID_ARCH_ABI']
-
-            if 'ANDROID_NDK_HOME' in os.environ:
-                cmake.definitions['ANDROID_NDK'] = os.environ.get('ANDROID_NDK_HOME')
 
         cmake.configure(source_folder=self._source_subfolder)
         return cmake
