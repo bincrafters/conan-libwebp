@@ -63,6 +63,20 @@ class LibwebpConan(ConanFile):
         return cmake
 
     def build(self):
+        if self.options.shared and self.settings.compiler == "Visual Studio":	
+            tools.replace_in_file(os.path.join(self._source_subfolder, 'src', 'webp', 'types.h'),	
+                                  '#ifndef WEBP_EXTERN',	
+                                  """#ifndef WEBP_EXTERN	
+#ifdef _MSC_VER	
+    #ifdef WEBP_DLL	
+        #define WEBP_EXTERN __declspec(dllexport)	
+    #else	
+        #define WEBP_EXTERN __declspec(dllimport)	
+    #endif	
+#endif /* _MSC_VER */	
+#endif	
+ #ifndef WEBP_EXTERN""")
+ 
         cmake = self._configure_cmake()
         cmake.build()
 
