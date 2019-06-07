@@ -58,6 +58,12 @@ class LibwebpConan(ConanFile):
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_PNG'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_TIFF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_JPEG'] = True
+        cmake.definitions['WEBP_BUILD_ANIM_UTILS'] = False
+        cmake.definitions['WEBP_BUILD_CWEBP'] = False
+        cmake.definitions['WEBP_BUILD_DWEBP'] = False
+        cmake.definitions['WEBP_BUILD_IMG2WEBP'] = False
+        cmake.definitions['WEBP_BUILD_GIF2WEBP'] = False
+        cmake.definitions['WEBP_BUILD_VWEBP'] = False
 
         cmake.configure()
         return cmake
