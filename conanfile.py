@@ -13,7 +13,8 @@ class LibwebpConan(ConanFile):
     url = "http://github.com/bincrafters/conan-libwebp"
     homepage = "https://github.com/webmproject/libwebp"
     author = "Bincrafters <bincrafters@gmail.com>"
-    license = "BSD 3-Clause"
+    topics = ("image","libwebp","webp","decoding","encoding")
+    license = "BSD-3-Clause"
     exports = ["LICENSE.md"]
     exports_sources = ['CMakeLists.txt',
                        '0001-install-pkg-config-files-during-the-CMake-build.patch']
@@ -27,17 +28,10 @@ class LibwebpConan(ConanFile):
 
     def source(self):
         source_url = "https://github.com/webmproject/libwebp"
-        tools.get("{0}/archive/v{1}.tar.gz".format(source_url, self.version))
+        tools.get("{0}/archive/v{1}.tar.gz".format(source_url, self.version),sha256="347cf85ddc3497832b5fa9eee62164a37b249c83adae0ba583093e039bf4881f")
         extracted_dir = self.name + "-" + self.version
 
         os.rename(extracted_dir, self._source_subfolder)
-
-        tools.patch(base_path=self._source_subfolder,
-                    patch_file='0001-install-pkg-config-files-during-the-CMake-build.patch')
-        os.rename(os.path.join(self._source_subfolder, "CMakeLists.txt"),
-                  os.path.join(self._source_subfolder, "CMakeListsOriginal.txt"))
-        shutil.copy("CMakeLists.txt",
-                    os.path.join(self._source_subfolder, "CMakeLists.txt"))
 
     def configure(self):
         del self.settings.compiler.libcxx
@@ -65,38 +59,10 @@ class LibwebpConan(ConanFile):
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_TIFF'] = True
         cmake.definitions['CMAKE_DISABLE_FIND_PACKAGE_JPEG'] = True
 
-        cmake.configure(source_folder=self._source_subfolder)
+        cmake.configure()
         return cmake
 
     def build(self):
-        # WEBP_EXTERN is not specified on Windows
-        # Set it to dllexport for building (see CMakeLists.txt) and to dllimport otherwise
-        if self.options.shared and self.settings.compiler == "Visual Studio":
-            tools.replace_in_file(os.path.join(self._source_subfolder, 'src', 'webp', 'types.h'),
-                                  '#ifndef WEBP_EXTERN',
-                                  """#ifndef WEBP_EXTERN
-#ifdef _MSC_VER
-    #ifdef WEBP_DLL
-        #define WEBP_EXTERN __declspec(dllexport)
-    #else
-        #define WEBP_EXTERN __declspec(dllimport)
-    #endif
-#endif /* _MSC_VER */
-#endif
-
-#ifndef WEBP_EXTERN""")
-
-        # cmake misses dll (RUNTIME) copy
-        tools.replace_in_file(os.path.join(self._source_subfolder, "CMakeListsOriginal.txt"),
-                              "LIBRARY DESTINATION lib",
-                              "RUNTIME DESTINATION bin\nLIBRARY DESTINATION lib")
-
-        if self._version_components[0] >= 1:
-            # allow to build webpmux
-            tools.replace_in_file(os.path.join(self._source_subfolder, "CMakeListsOriginal.txt"),
-                                  "if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)",
-                                  "if(TRUE)")
-
         cmake = self._configure_cmake()
         cmake.build()
 
