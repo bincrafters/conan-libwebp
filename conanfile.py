@@ -87,6 +87,11 @@ class LibwebpConan(ConanFile):
 #endif	
  #ifndef WEBP_EXTERN""")
 
+        # FIXME: move to patch
+        tools.replace_in_file(os.path.join(self._source_subfolder, "CMakeLists.txt"),
+                "if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)",
+                "if(1)")
+
         cmake = self._configure_cmake()
         cmake.build()
 
