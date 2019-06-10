@@ -63,6 +63,9 @@ class LibwebpConan(ConanFile):
         cmake.definitions['WEBP_BUILD_IMG2WEBP'] = False
         cmake.definitions['WEBP_BUILD_GIF2WEBP'] = False
         cmake.definitions['WEBP_BUILD_VWEBP'] = False
+        cmake.definitions['WEBP_BUILD_EXTRAS'] = False
+        cmake.definitions['WEBP_BUILD_WEBPINFO'] = False
+        cmake.definitions['WEBP_BUILD_WEBPMUX'] = False
 
         cmake.configure()
         return cmake
