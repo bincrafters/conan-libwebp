@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import shutil
 from conans import ConanFile, CMake, tools
 
 
