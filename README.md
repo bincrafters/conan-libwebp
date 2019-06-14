@@ -2,7 +2,7 @@
 
 | Bintray | Windows | Linux & macOS |
 |:--------:|:---------:|:-----------------:|
-|[![Download](https://api.bintray.com/packages/bincrafters/public-conan/libwebp%3Abincrafters/images/download.svg)](https://bintray.com/bincrafters/public-conan/libwebp%3Abincrafters/_latestVersion)|[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-libwebp?svg=true)](https://ci.appveyor.com/project/BinCrafters/conan-libwebp)|[![Build Status](https://travis-ci.org/bincrafters/conan-libwebp.svg)](https://travis-ci.org/bincrafters/conan-libwebp)|
+|[![Download](https://api.bintray.com/packages/bincrafters/public-conan/libwebp%3Abincrafters/images/download.svg)](https://bintray.com/bincrafters/public-conan/libwebp%3Abincrafters/_latestVersion)|[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-libwebp?svg=true)](https://ci.appveyor.com/project/BinCrafters/conan-libwebp)|[![Build Status](https://travis-ci.com/bincrafters/conan-libwebp.svg)](https://travis-ci.com/bincrafters/conan-libwebp)|
 
 ## Conan.io Information
 
