@@ -75,6 +75,7 @@ class LibwebpConan(ConanFile):
         cmake.definitions['WEBP_BUILD_WEBPMUX'] = False
 
         cmake.configure()
+
         return cmake
 
     def build(self):
