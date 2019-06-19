@@ -16,7 +16,8 @@ class LibwebpConan(ConanFile):
     license = "BSD-3-Clause"
     exports = ["LICENSE.md"]
     exports_sources = ['CMakeLists.txt',
-                       '0001-install-pkg-config-files-during-the-CMake-build.patch']
+                       '0001-fix-dll-export.patch',
+                       '0002-enable-webpmux.patch']
     generators = 'cmake'
     _source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
@@ -31,6 +32,12 @@ class LibwebpConan(ConanFile):
         extracted_dir = self.name + "-" + self.version
 
         os.rename(extracted_dir, self._source_subfolder)
+
+        tools.patch(base_path=self._source_subfolder,
+            patch_file='0001-fix-dll-export.patch')
+
+        tools.patch(base_path=self._source_subfolder,
+            patch_file='0002-enable-webpmux.patch')
 
     def configure(self):
         del self.settings.compiler.libcxx
@@ -71,27 +78,6 @@ class LibwebpConan(ConanFile):
         return cmake
 
     def build(self):
-        # WEBP_EXTERN is not specified on Windows
-        # Set it to dllexport for building (see CMakeLists.txt) and to dllimport otherwise
-        if self.options.shared and self.settings.compiler == "Visual Studio":	
-            tools.replace_in_file(os.path.join(self._source_subfolder, 'src', 'webp', 'types.h'),	
-                                  '#ifndef WEBP_EXTERN',	
-                                  """#ifndef WEBP_EXTERN	
-#ifdef _MSC_VER	
-    #ifdef WEBP_DLL	
-        #define WEBP_EXTERN __declspec(dllexport)	
-    #else	
-        #define WEBP_EXTERN __declspec(dllimport)	
-    #endif	
-#endif /* _MSC_VER */	
-#endif	
- #ifndef WEBP_EXTERN""")
-
-        # FIXME: move to patch
-        tools.replace_in_file(os.path.join(self._source_subfolder, "CMakeLists.txt"),
-                "if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)",
-                "if(1)")
-
         cmake = self._configure_cmake()
         cmake.build()
 

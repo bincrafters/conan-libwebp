@@ -1,0 +1,34 @@
+From 3d41f40c076b1d43fb642bf9bddad64d2dba98e7 Mon Sep 17 00:00:00 2001
+From: Stephan Vedder <vedder@mbits.info>
+Date: Wed, 19 Jun 2019 14:18:57 +0200
+Subject: [PATCH] Always build webpmux
+
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7f4750e4..995dd43e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@ option(WEBP_ENABLE_SIMD "Enable any SIMD optimization." ON)
+ option(WEBP_BUILD_ANIM_UTILS "Build animation utilities." ON)
+ option(WEBP_BUILD_CWEBP "Build the cwebp command line tool." ON)
+ option(WEBP_BUILD_DWEBP "Build the dwebp command line tool." ON)
+-option(WEBP_BUILD_GIF2WEBP "Build the gif2webp conversion tool." ON)
++option(WEBP_BUILD_WWEBP "Build the gif2webp conversion tool." ON)
+ option(WEBP_BUILD_IMG2WEBP "Build the img2webp animation tool." ON)
+ option(WEBP_BUILD_VWEBP "Build the vwebp viewer tool." ON)
+ option(WEBP_BUILD_WEBPINFO "Build the webpinfo command line tool." ON)
+@@ -393,7 +393,7 @@ if(WEBP_BUILD_CWEBP)
+   install(TARGETS cwebp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ endif()
+ 
+-if(WEBP_BUILD_GIF2WEBP OR WEBP_BUILD_IMG2WEBP)
++if(1)
+   parse_makefile_am(${CMAKE_CURRENT_SOURCE_DIR}/src/mux "WEBP_MUX_SRCS" "")
+   add_library(libwebpmux ${WEBP_MUX_SRCS})
+   target_link_libraries(libwebpmux webp)
+-- 
+2.20.1
+
