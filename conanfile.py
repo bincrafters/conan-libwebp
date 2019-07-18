@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os
 from conans import ConanFile, CMake, tools
 
@@ -19,25 +16,18 @@ class LibwebpConan(ConanFile):
                        '0001-fix-dll-export.patch',
                        '0002-enable-webpmux.patch']
     generators = 'cmake'
-    _source_subfolder = "source_subfolder"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False],
                "with_simd": [True, False], "near_lossless": [True, False],
                "swap_16bit_csp": [True, False]}
     default_options = {'shared': False, 'fPIC': True, 'with_simd': True, 'near_lossless': True, 'swap_16bit_csp': False}
+    _source_subfolder = "source_subfolder"
 
     def source(self):
-        source_url = "https://github.com/webmproject/libwebp"
-        tools.get("{0}/archive/v{1}.tar.gz".format(source_url, self.version),sha256="347cf85ddc3497832b5fa9eee62164a37b249c83adae0ba583093e039bf4881f")
+        sha256 = "347cf85ddc3497832b5fa9eee62164a37b249c83adae0ba583093e039bf4881f"
+        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256=sha256)
         extracted_dir = self.name + "-" + self.version
-
         os.rename(extracted_dir, self._source_subfolder)
-
-        tools.patch(base_path=self._source_subfolder,
-            patch_file='0001-fix-dll-export.patch')
-
-        tools.patch(base_path=self._source_subfolder,
-            patch_file='0002-enable-webpmux.patch')
 
     def configure(self):
         del self.settings.compiler.libcxx
@@ -79,6 +69,8 @@ class LibwebpConan(ConanFile):
         return cmake
 
     def build(self):
+        tools.patch(base_path=self._source_subfolder, patch_file='0001-fix-dll-export.patch')
+        tools.patch(base_path=self._source_subfolder, patch_file='0002-enable-webpmux.patch')
         cmake = self._configure_cmake()
         cmake.build()
 
@@ -86,7 +78,6 @@ class LibwebpConan(ConanFile):
         cmake = self._configure_cmake()
         cmake.install()
         self.copy("COPYING", dst="licenses", src=self._source_subfolder)
-        self.copy("FindWEBP.cmake", dst=".", src=".")
 
     def package_info(self):
         self.cpp_info.libs = ['webpmux', 'webpdemux', 'webpdecoder', 'webp']
