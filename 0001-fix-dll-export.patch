@@ -1,35 +1,21 @@
-From ff460400e21e054328a15edaa6f16d9eb945905e Mon Sep 17 00:00:00 2001
-From: Stephan Vedder <vedder@mbits.info>
-Date: Wed, 19 Jun 2019 14:11:30 +0200
-Subject: [PATCH] Fix MSVC dll export
-
----
- fix_empty_poster.patch | 0
- src/webp/types.h       | 7 +++++++
- 2 files changed, 7 insertions(+)
- create mode 100644 fix_empty_poster.patch
-
-diff --git a/fix_empty_poster.patch b/fix_empty_poster.patch
-new file mode 100644
-index 00000000..e69de29b
 diff --git a/src/webp/types.h b/src/webp/types.h
-index 0ce2622e..28ea5a2d 100644
+index 0ce2622..b810e1b 100644
 --- a/src/webp/types.h
 +++ b/src/webp/types.h
-@@ -37,6 +37,13 @@ typedef long long int int64_t;
+@@ -37,6 +37,16 @@ typedef long long int int64_t;
  #endif  /* _MSC_VER */
- 
+
  #ifndef WEBP_EXTERN
-+#ifdef _MSC_VER	
-+    #ifdef WEBP_DLL	
-+        #define WEBP_EXTERN __declspec(dllexport)	
-+    #else	
-+        #define WEBP_EXTERN __declspec(dllimport)	
-+    #endif	
-+#endif /* _MSC_VER */	
++  #ifdef   _MSC_VER
++    #ifdef WEBP_DLL
++        #define WEBP_EXTERN __declspec(dllexport)
++    #else
++        #define WEBP_EXTERN __declspec(dllimport)
++    #endif
++  #endif /* _MSC_VER */
++#endif
++
++#ifndef WEBP_EXTERN
  // This explicitly marks library functions and allows for changing the
  // signature for e.g., Windows DLL builds.
  # if defined(__GNUC__) && __GNUC__ >= 4
--- 
-2.20.1
-

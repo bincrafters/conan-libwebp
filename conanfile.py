@@ -4,7 +4,7 @@ from conans import ConanFile, CMake, tools
 
 class LibwebpConan(ConanFile):
     name = "libwebp"
-    version = "1.0.2"
+    version = "1.0.3"
     description = "library to encode and decode images in WebP format"
     url = "http://github.com/bincrafters/conan-libwebp"
     homepage = "https://github.com/webmproject/libwebp"
@@ -24,7 +24,7 @@ class LibwebpConan(ConanFile):
     _source_subfolder = "source_subfolder"
 
     def source(self):
-        sha256 = "347cf85ddc3497832b5fa9eee62164a37b249c83adae0ba583093e039bf4881f"
+        sha256 = "082d114bcb18a0e2aafc3148d43367c39304f86bf18ba0b2e766447e111a4a91"
         tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256=sha256)
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
