@@ -83,3 +83,5 @@ class LibwebpConan(ConanFile):
         self.cpp_info.libs = ['webpmux', 'webpdemux', 'webpdecoder', 'webp']
         if self.options.shared and self.settings.os == "Windows" and self.settings.compiler != 'Visual Studio':
             self.cpp_info.libs = [lib + '.dll' for lib in self.cpp_info.libs]
+        if self.settings.os == "Linux":
+            self.cpp_info.libs.append("pthread")
